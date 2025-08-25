@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: task-tracker
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto:
