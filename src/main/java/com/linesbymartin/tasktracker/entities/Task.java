@@ -1,5 +1,7 @@
-package com.linesbymartin.tasktracker.domain.entities;
+package com.linesbymartin.tasktracker.entities;
 
+import com.linesbymartin.tasktracker.enums.TaskPriority;
+import com.linesbymartin.tasktracker.enums.TaskStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
