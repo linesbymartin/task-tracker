@@ -3,12 +3,13 @@ package com.linesbymartin.tasktracker.domain.entities;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tasks")
-public class Task {
+@Table(name = "task_lists")
+public class TaskList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -21,18 +22,8 @@ public class Task {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "due_date")
-    private Instant dueDate;
-
-    @Column(name = "status", nullable = false)
-    private TaskStatus status;
-
-    @Column(name = "priority", nullable = false)
-    private TaskPriority priority;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_list_id", nullable = false)
-    private TaskList taskList;
+    @OneToMany(mappedBy = "taskList", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<Task> tasks;
 
     @Column(name = "timestamp_create", nullable = false, updatable = false)
     private Instant timestampCreate;
@@ -40,17 +31,14 @@ public class Task {
     @Column(name = "timestamp_update")
     private Instant timestampUpdate;
 
-    public Task() {
+    public TaskList() {
     }
 
-    public Task(UUID id, String title, String description, Instant dueDate, TaskStatus status, TaskPriority priority, TaskList taskList, Instant timestampCreate, Instant timestampUpdate) {
+    public TaskList(UUID id, String title, String description, List<Task> tasks, Instant timestampCreate, Instant timestampUpdate) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.dueDate = dueDate;
-        this.status = status;
-        this.priority = priority;
-        this.taskList = taskList;
+        this.tasks = tasks;
         this.timestampCreate = timestampCreate;
         this.timestampUpdate = timestampUpdate;
     }
@@ -79,36 +67,12 @@ public class Task {
         this.description = description;
     }
 
-    public Instant getDueDate() {
-        return dueDate;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public void setDueDate(Instant dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
-    }
-
-    public TaskPriority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(TaskPriority priority) {
-        this.priority = priority;
-    }
-
-    public TaskList getTaskList() {
-        return taskList;
-    }
-
-    public void setTaskList(TaskList taskList) {
-        this.taskList = taskList;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public Instant getTimestampCreate() {
@@ -130,25 +94,22 @@ public class Task {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return Objects.equals(id, task.id) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(dueDate, task.dueDate) && status == task.status && priority == task.priority && Objects.equals(taskList, task.taskList) && Objects.equals(timestampCreate, task.timestampCreate) && Objects.equals(timestampUpdate, task.timestampUpdate);
+        TaskList taskList = (TaskList) o;
+        return Objects.equals(id, taskList.id) && Objects.equals(title, taskList.title) && Objects.equals(description, taskList.description) && Objects.equals(tasks, taskList.tasks) && Objects.equals(timestampCreate, taskList.timestampCreate) && Objects.equals(timestampUpdate, taskList.timestampUpdate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, dueDate, status, priority, taskList, timestampCreate, timestampUpdate);
+        return Objects.hash(id, title, description, tasks, timestampCreate, timestampUpdate);
     }
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "TaskList{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", dueDate=" + dueDate +
-                ", status=" + status +
-                ", priority=" + priority +
-                ", taskList=" + taskList +
+                ", tasks=" + tasks +
                 ", timestampCreate=" + timestampCreate +
                 ", timestampUpdate=" + timestampUpdate +
                 '}';
