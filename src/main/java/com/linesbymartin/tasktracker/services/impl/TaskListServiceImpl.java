@@ -26,6 +26,7 @@ public class TaskListServiceImpl implements TaskListService {
     }
 
     @Override
+    @Transactional
     public TaskList createTaskList(TaskList taskList) {
         if (null != taskList.getId()) {
             throw new IllegalArgumentException("TaskList already has an ID!");
@@ -69,6 +70,7 @@ public class TaskListServiceImpl implements TaskListService {
     }
 
     @Override
+    @Transactional
     public void deleteTaskList(UUID id) {
         taskListRepository.deleteById(id);
     }
