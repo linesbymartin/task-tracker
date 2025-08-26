@@ -29,4 +29,9 @@ public class TasksController {
     public TaskDTO createTask(@PathVariable("task_list_id") UUID taskListId, @RequestBody TaskDTO taskDTO) {
         return taskMapper.toDto(taskService.createTask(taskListId, taskMapper.fromDto(taskDTO)));
     }
+
+    @GetMapping("/{task_id}")
+    public TaskDTO getTask(@PathVariable("task_list_id") UUID taskListId, @PathVariable("task_id") UUID taskId) {
+            return taskService.getTask(taskListId, taskId).map(taskMapper::toDto).orElse(null);
+    }
 }

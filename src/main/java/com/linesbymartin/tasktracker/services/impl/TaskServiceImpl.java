@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -64,6 +65,11 @@ public class TaskServiceImpl implements TaskService {
         dbTaskList.setTimestampUpdate(Instant.now());
 
         return taskRepository.save(taskToSave);
+    }
+
+    @Override
+    public Optional<Task> getTask(UUID taskListId, UUID id) {
+        return taskRepository.findByTaskListIdAndId(taskListId, id);
     }
 
 
