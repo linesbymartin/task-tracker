@@ -82,10 +82,6 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Changing Task ID is not permitted!");
         }
 
-        if (task.getTaskList().getId() != taskListId) {
-            throw new IllegalArgumentException("TaskList ID does not match!");
-        }
-
         if (task.getTitle() == null || task.getTitle().isBlank()) {
             throw new IllegalArgumentException("Task title cannot be empty");
         }
@@ -98,7 +94,7 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task priority cannot be null");
         }
 
-        Task dbTask = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found!"));
+        Task dbTask = taskRepository.findByTaskListIdAndId(taskListId, taskId).orElseThrow(() -> new IllegalArgumentException("Task not found!"));
 
         dbTask.setTitle(task.getTitle().trim());
         dbTask.setDescription(task.getDescription().trim());
