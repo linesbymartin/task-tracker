@@ -72,5 +72,41 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findByTaskListIdAndId(taskListId, id);
     }
 
+    @Override
+    public Task updateTask(UUID taskListId, UUID taskId, Task task) {
+        if (task.getId() == null) {
+            throw new IllegalArgumentException("Task must have an ID!");
+        }
+
+        if (!taskId.equals(task.getId())) {
+            throw new IllegalArgumentException("Changing Task ID is not permitted!");
+        }
+
+        if (task.getTaskList().getId() != taskListId) {
+            throw new IllegalArgumentException("TaskList ID does not match!");
+        }
+
+        if (task.getTitle() == null || task.getTitle().isBlank()) {
+            throw new IllegalArgumentException("Task title cannot be empty");
+        }
+
+        if (task.getStatus() == null) {
+            throw new IllegalArgumentException("Task status cannot be null");
+        }
+
+        if (task.getPriority() == null) {
+            throw new IllegalArgumentException("Task priority cannot be null");
+        }
+
+        Task dbTask = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found!"));
+
+        dbTask.setTitle(task.getTitle().trim());
+        dbTask.setDescription(task.getDescription().trim());
+        dbTask.setDueDate(task.getDueDate());
+        dbTask.setPriority(task.getPriority());
+        dbTask.setStatus(task.getStatus());
+        dbTask.setTimestampUpdate(Instant.now());
+        return taskRepository.save(dbTask);
+    }
 
 }

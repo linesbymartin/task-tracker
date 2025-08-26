@@ -21,17 +21,34 @@ public class TasksController {
     }
 
     @GetMapping
-    public List<TaskDTO> listTasks(@PathVariable("task_list_id") UUID taskListId) {
+    public List<TaskDTO> listTasks(
+            @PathVariable("task_list_id") UUID taskListId
+    ) {
         return taskService.listTasks(taskListId).stream().map(taskMapper::toDto).toList();
     }
 
     @PostMapping
-    public TaskDTO createTask(@PathVariable("task_list_id") UUID taskListId, @RequestBody TaskDTO taskDTO) {
+    public TaskDTO createTask(
+            @PathVariable("task_list_id") UUID taskListId,
+            @RequestBody TaskDTO taskDTO
+    ) {
         return taskMapper.toDto(taskService.createTask(taskListId, taskMapper.fromDto(taskDTO)));
     }
 
     @GetMapping("/{task_id}")
-    public TaskDTO getTask(@PathVariable("task_list_id") UUID taskListId, @PathVariable("task_id") UUID taskId) {
-            return taskService.getTask(taskListId, taskId).map(taskMapper::toDto).orElse(null);
+    public TaskDTO getTask(
+            @PathVariable("task_list_id") UUID taskListId,
+            @PathVariable("task_id") UUID taskId
+    ) {
+        return taskService.getTask(taskListId, taskId).map(taskMapper::toDto).orElse(null);
+    }
+
+    @PutMapping("/{task_id}")
+    public TaskDTO updateTask(
+            @PathVariable("task_list_id") UUID taskListId,
+            @PathVariable("task_id") UUID taskId,
+            @RequestBody TaskDTO taskDTO
+    ) {
+        return taskMapper.toDto(taskService.updateTask(taskListId, taskId, taskMapper.fromDto(taskDTO)));
     }
 }
