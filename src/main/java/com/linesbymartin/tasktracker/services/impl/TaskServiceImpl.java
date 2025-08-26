@@ -73,6 +73,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public Task updateTask(UUID taskListId, UUID taskId, Task task) {
         if (task.getId() == null) {
             throw new IllegalArgumentException("Task must have an ID!");
@@ -103,6 +104,12 @@ public class TaskServiceImpl implements TaskService {
         dbTask.setStatus(task.getStatus());
         dbTask.setTimestampUpdate(Instant.now());
         return taskRepository.save(dbTask);
+    }
+
+    @Override
+    @Transactional
+    public void deleteTask(UUID taskListId, UUID taskId) {
+       taskRepository.deleteByTaskListIdAndId(taskListId, taskId);
     }
 
 }
